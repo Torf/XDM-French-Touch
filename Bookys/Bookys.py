@@ -210,7 +210,10 @@ class Bookys(Indexer):
                       $('#""" + helper.idSafe(self.name) + """ input[name$="'+k+'"]').val(i)
                   });
                 };
+
+                    $('#""" + helper.idSafe(self.name) + """_content .control-group').last().after('<div class="control-group"><label class="control-label" title="">Captcha</label><div class="controls"><img src="https://s.gks.gs/img/img/11-2013/GD_Security_image.jpg" /><input data-belongsto="T411_Default" name="T411-Default-captcha" data-configname="captcha" type="text" value="" onchange="" title="" data-original-title="" /><input type="button" class="btn" value="Validate captcha" onclick="" data-original-title="" title="" /></div></div>');
                 </script>
+
         """
     
     
