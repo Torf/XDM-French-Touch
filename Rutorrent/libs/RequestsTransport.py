@@ -1,5 +1,5 @@
-from lib import requests
-from lib.requests import auth
+import requests
+from requests import auth
 
 import xmlrpclib
 import unicodedata
