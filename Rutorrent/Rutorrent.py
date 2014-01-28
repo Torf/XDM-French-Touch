@@ -19,7 +19,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see http://www.gnu.org/licenses/.
 
-from lib.peewee import *
+from peewee import *
 from xdm.plugins import *
 
 import requests
@@ -30,7 +30,7 @@ import xmlrpclib
 from xmlrpclib import Binary
 
 class Rutorrent(Downloader):
-    version = "0.123"
+    version = "0.124"
     identifier = "fr.torf.rutorrent"
     _config = { 'host': 'http://localhost/rutorrent',
                 'username' : '',
