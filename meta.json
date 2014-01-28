@@ -56,6 +56,17 @@
             "type": "Downloader",
             "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
             }
+        ],
+        "fr.torf.alternativetitles": [
+            {
+            "major_version": 0,
+            "minor_version": 101,
+            "format": "zip",
+            "desc": "Alternative Titles",
+            "name": "Alternative Titles",
+            "type": "SearchTermFilter",
+            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
+            }
         ]
     }
 }
