@@ -20,11 +20,11 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 
 from xdm.plugins import *
-from lib import requests
+import requests
 from xdm import helper
 
 class T411(Indexer):
-    version = "0.109"
+    version = "0.111"
     identifier = "fr.torf.t411"
     _config = {'username': '',
                'password':'',

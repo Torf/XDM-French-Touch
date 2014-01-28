@@ -23,7 +23,7 @@
 
 # other libs should be imported as you need them but why dont you have a look at the libs xdm comes with
 from xdm.plugins import *
-from lib import requests
+import requests
 import datetime
 
 from xml.dom.minidom import parseString

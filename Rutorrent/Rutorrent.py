@@ -22,7 +22,7 @@
 from lib.peewee import *
 from xdm.plugins import *
 
-from lib import requests
+import requests
 from libs import RutorrentClient, bencode
 
 import hashlib
@@ -30,7 +30,7 @@ import xmlrpclib
 from xmlrpclib import Binary
 
 class Rutorrent(Downloader):
-    version = "0.122"
+    version = "0.123"
     identifier = "fr.torf.rutorrent"
     _config = { 'host': 'http://localhost/rutorrent',
                 'username' : '',
