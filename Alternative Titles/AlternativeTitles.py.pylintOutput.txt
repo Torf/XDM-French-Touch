@@ -1,0 +1,167 @@
+************* Module SearchTermFilter.Alternative-Titles-fr-torf-alternativetitles-0_101.AlternativeTitles
+C:  1, 0: Trailing whitespace (trailing-whitespace)
+C:  2, 0: Trailing whitespace (trailing-whitespace)
+C:  3, 0: Trailing whitespace (trailing-whitespace)
+C:  4, 0: Trailing whitespace (trailing-whitespace)
+C:  5, 0: Trailing whitespace (trailing-whitespace)
+C:  6, 0: Trailing whitespace (trailing-whitespace)
+C:  7, 0: Trailing whitespace (trailing-whitespace)
+C:  8, 0: Trailing whitespace (trailing-whitespace)
+C:  9, 0: Trailing whitespace (trailing-whitespace)
+C: 10, 0: Trailing whitespace (trailing-whitespace)
+C: 11, 0: Trailing whitespace (trailing-whitespace)
+C: 12, 0: Trailing whitespace (trailing-whitespace)
+C: 13, 0: Trailing whitespace (trailing-whitespace)
+C: 14, 0: Trailing whitespace (trailing-whitespace)
+C: 15, 0: Trailing whitespace (trailing-whitespace)
+C: 16, 0: Trailing whitespace (trailing-whitespace)
+C: 17, 0: Trailing whitespace (trailing-whitespace)
+C: 18, 0: Trailing whitespace (trailing-whitespace)
+C: 19, 0: Trailing whitespace (trailing-whitespace)
+C: 20, 0: Trailing whitespace (trailing-whitespace)
+C: 21, 0: Trailing whitespace (trailing-whitespace)
+C: 22, 0: Trailing whitespace (trailing-whitespace)
+C: 23, 0: Trailing whitespace (trailing-whitespace)
+C: 24, 0: Trailing whitespace (trailing-whitespace)
+C: 25, 0: Trailing whitespace (trailing-whitespace)
+C: 26, 0: Trailing whitespace (trailing-whitespace)
+C: 27, 0: Trailing whitespace (trailing-whitespace)
+C: 28, 0: Trailing whitespace (trailing-whitespace)
+C: 29, 0: Trailing whitespace (trailing-whitespace)
+C: 30, 0: Trailing whitespace (trailing-whitespace)
+C: 31, 0: Trailing whitespace (trailing-whitespace)
+C: 32, 0: Trailing whitespace (trailing-whitespace)
+C: 33, 0: Trailing whitespace (trailing-whitespace)
+C: 34, 0: Trailing whitespace (trailing-whitespace)
+C: 35, 0: Trailing whitespace (trailing-whitespace)
+C: 36, 0: Trailing whitespace (trailing-whitespace)
+C: 37, 0: Trailing whitespace (trailing-whitespace)
+C: 38, 0: Trailing whitespace (trailing-whitespace)
+C: 39, 0: Trailing whitespace (trailing-whitespace)
+C: 40, 0: Trailing whitespace (trailing-whitespace)
+C: 41, 0: Trailing whitespace (trailing-whitespace)
+C: 42, 0: Trailing whitespace (trailing-whitespace)
+C: 43, 0: Trailing whitespace (trailing-whitespace)
+C: 44, 0: Trailing whitespace (trailing-whitespace)
+C: 45, 0: Trailing whitespace (trailing-whitespace)
+C: 46, 0: Trailing whitespace (trailing-whitespace)
+C: 47, 0: Trailing whitespace (trailing-whitespace)
+C: 48, 0: Trailing whitespace (trailing-whitespace)
+C: 49, 0: Trailing whitespace (trailing-whitespace)
+C: 50, 0: Trailing whitespace (trailing-whitespace)
+C: 51, 0: Trailing whitespace (trailing-whitespace)
+C: 52, 0: Trailing whitespace (trailing-whitespace)
+C: 53, 0: Trailing whitespace (trailing-whitespace)
+C: 54, 0: Trailing whitespace (trailing-whitespace)
+C: 55, 0: Trailing whitespace (trailing-whitespace)
+C: 56, 0: Trailing whitespace (trailing-whitespace)
+C: 57, 0: Trailing whitespace (trailing-whitespace)
+C: 58, 0: Trailing whitespace (trailing-whitespace)
+C: 59, 0: Trailing whitespace (trailing-whitespace)
+C: 60, 0: Trailing whitespace (trailing-whitespace)
+C: 61, 0: Trailing whitespace (trailing-whitespace)
+C: 62, 0: Trailing whitespace (trailing-whitespace)
+C: 63, 0: Trailing whitespace (trailing-whitespace)
+C: 64, 0: Trailing whitespace (trailing-whitespace)
+C: 65, 0: Trailing whitespace (trailing-whitespace)
+C: 66, 0: Trailing whitespace (trailing-whitespace)
+C: 67, 0: Trailing whitespace (trailing-whitespace)
+C: 68, 0: Trailing whitespace (trailing-whitespace)
+W: 20, 0: Relative import 'tmdb', should be u'SearchTermFilter.Alternative-Titles-fr-torf-alternativetitles-0_101.tmdb' (relative-import)
+
+
+Report
+======
+34 statements analysed.
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |38     |65.52 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|docstring |1      |1.72  |NC       |NC         |
++----------+-------+------+---------+-----------+
+|comment   |17     |29.31 |NC       |NC         |
++----------+-------+------+---------+-----------+
+|empty     |2      |3.45  |NC       |NC         |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |NC       |NC         |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |NC       |NC         |
++-------------------------+------+---------+-----------+
+
+
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |2      |NC         |NC         |100.00      |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |68     |NC       |NC         |
++-----------+-------+---------+-----------+
+|refactor   |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+|warning    |1      |NC       |NC         |
++-----------+-------+---------+-----------+
+|error      |0      |NC       |NC         |
++-----------+-------+---------+-----------+
+
+
+
+Messages
+--------
+
++-----------+------------+
+|message id |occurrences |
++===========+============+
+|C0303      |68          |
++-----------+------------+
+|W0403      |1           |
++-----------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at -10.29/10
+
+External dependencies
+---------------------
+::
+
+    SearchTermFilter 
+      \-Alternative-Titles-fr-torf-alternativetitles-0_101 
+        \-tmdb (SearchTermFilter.Alternative-Titles-fr-torf-alternativetitles-0_101.AlternativeTitles)
+
+
+
