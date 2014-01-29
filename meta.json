@@ -16,7 +16,7 @@
         "fr.torf.t411": [
             {
                 "major_version": 0,
-                "minor_version": 108,
+                "minor_version": 111,
                 "format": "zip",
                 "desc": "T411.me torrent indexer",
                 "name": "T411",
@@ -27,7 +27,7 @@
         "fr.torf.rutorrent": [
             {
                 "major_version": 0,
-                "minor_version": 122,
+                "minor_version": 124,
                 "format": "zip",
                 "desc": "rutorrent torrent downloader",
                 "name": "Rutorrent",
