@@ -20,7 +20,7 @@ from xdm.plugins import *
 import tmdb
 
 class AlternativeTitles(SearchTermFilter):
-    version = "0.105"
+    version = "0.11"
     identifier = "fr.torf.alternativetitles"
     addMediaTypeOptions = 'runFor'
     config_meta = {'plugin_desc': 'Gets alternative titles from http://www.themoviedb.org/.',
@@ -33,20 +33,18 @@ class AlternativeTitles(SearchTermFilter):
                'title_language_es' : False,
                 } 
 
-#_hidden_config = {'tmdb_lang' : 'EN'}
-
     def __init__(self, instance='Default'):
         SearchTermFilter.__init__(self, instance=instance)
         tmdb.configure('5c235bb1b487932ebf0a9935c8b39b0a', 'EN')
 
     def compare(self, element, terms):
         if element.type != "Movie":
-            log("i only work for Movies, i got a %s" % element.type)
+            log.info("i only work for Movies, i got a %s" % element.type)
             return terms
 
         tmdb_id = element.getIdentifier('tmdb')
         if not tmdb_id:
-            log("no tmdb_id found for %s" % element)
+            log.info("no tmdb_id found for %s" % element)
 
             movies = tmdb.Movies(element.name, limit=True)
             for tmdb_movie in movies:
@@ -56,13 +54,15 @@ class AlternativeTitles(SearchTermFilter):
             movie = tmdb.Movie(tmdb_id)
 
         if not movie:
-            log("no movie found in themoviedb for %s" % element)
+            log.info("no movie found in themoviedb for %s" % element)
             return terms
 
-        for alternative in movie.get_alternative_titles():
-            langkey = "title_language_%s" % alternative['lang'].lower()
-            if langkey in self.c:
-                if self.c[langkey]:
+        alts = movie.get_alternative_titles()
+
+        for alternative in alts:
+            langconfig = self.c.getConfig("title_language_%s" % alternative['lang'].lower())
+            if langconfig:
+                if langconfig.value:
                     terms.append(alternative['title'])
 
         return terms
