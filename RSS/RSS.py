@@ -23,13 +23,13 @@
 
 # other libs should be imported as you need them but why dont you have a look at the libs xdm comes with
 from xdm.plugins import *
-from lib import requests
+import requests
 import datetime
 
 from xml.dom.minidom import parseString
 from xml.dom.minidom import Node
 
-from lib.dateutil.parser import parse as parseDate
+from dateutil.parser import parse as parseDate
 from babel.dates import format_datetime
 
 from libs import bencode
