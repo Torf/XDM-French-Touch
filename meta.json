@@ -65,7 +65,7 @@
             "desc": "Alternative Titles",
             "name": "Alternative Titles",
             "type": "SearchTermFilter",
-            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
+            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
             }
         ]
     }
