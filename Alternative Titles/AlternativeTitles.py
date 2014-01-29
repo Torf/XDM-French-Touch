@@ -20,7 +20,7 @@ from xdm.plugins import *
 import tmdb
 
 class AlternativeTitles(SearchTermFilter):
-    version = "0.104"
+    version = "0.105"
     identifier = "fr.torf.alternativetitles"
     addMediaTypeOptions = 'runFor'
     config_meta = {'plugin_desc': 'Gets alternative titles from http://www.themoviedb.org/.',
@@ -33,11 +33,11 @@ class AlternativeTitles(SearchTermFilter):
                'title_language_es' : False,
                 } 
 
-    _hidden_config = {'tmdb_lang' : 'EN'}
+#_hidden_config = {'tmdb_lang' : 'EN'}
 
     def __init__(self, instance='Default'):
         SearchTermFilter.__init__(self, instance=instance)
-        tmdb.configure('5c235bb1b487932ebf0a9935c8b39b0a', self.hc.tmdb_lang)
+        tmdb.configure('5c235bb1b487932ebf0a9935c8b39b0a', 'EN')
 
     def compare(self, element, terms):
         if element.type != "Movie":
