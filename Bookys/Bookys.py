@@ -18,16 +18,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
+import BeautifulSoup
 
 from xdm.plugins import *
-from lib import requests
-
-from libs.bs4 import BeautifulSoup
-
 from xdm import helper
+
+import requests
 import re
 import urllib 
 import unicodedata
+import os.path
+import random
 
 class Bookys(Indexer):
     version = "0.101"
@@ -43,16 +44,17 @@ class Bookys(Indexer):
                       'userId' : '',
                       'cryptedPassword' : '' }
 
-    config_meta = {
-        'plugin_desc': 'Bookys.net torrent indexer.',
-        'plugin_buttons': {'test_connection':    {'action': _testConnection, 'name': 'Test connection'}}
-          }
+    _currentSessionId = None
+    _generatedCaptchaId = None
 
+    addMediaTypeOptions = ['de.lad1337.books']
     types = ['de.lad1337.torrent']
-
 
     def _baseUrl(self):
         return "https://bookys.net"
+
+    def _loginUrl(self):
+        return "%s/login.php" % self._baseUrl()        
 
     def _linksUrl(self):
         return "%s/links.php" % self._baseUrl()
@@ -158,15 +160,54 @@ class Bookys(Indexer):
 
         return (True, soup)
 
-    def _testConnection(self, userId, cryptedPassword):
-        webResult = self._getWebResponse(self._searchUrl(), {}, userId=userId, cryptedPassword=cryptedPassword)
+    def _testConnection(self, username, password):
+        webResult = self._getWebResponse(self._searchUrl(), {}, userId=username, cryptedPassword=password)
 
         if not webResult[0]:
             return (False, {}, "Connection failed ! (%s)" % webResult[1])
 
         return (True, {}, 'Connection made!')
-    _testConnection.args = ['userId', 'cryptedPassword']
+    _testConnection.args = ['username', 'password']
     
+    def _generateCaptcha(self):
+        session = requests.Session()
+
+        # get new session
+        session.post("https://bookys.net/captcha/newsession.php", verify=False);
+
+        # get image url
+        response = session.post("https://bookys.net/captcha/image_req.php", verify=False);
+        # regex extract from src="captcha/GD_Security_image.php?1391434819"
+        match = re.search(r'src="captcha/GD_Security_image.php\?(\d+)"', response.text)
+        if not match:
+            return (False, {}, "Can't generate captcha.")
+
+        self._generatedCaptchaId = str(match.group(1))
+
+        # get image binary and write image file.
+        imgResponse = session.get('https://bookys.net/captcha/GD_Security_image.php?'+self._generatedCaptchaId, verify=False)
+        imgContent = imgResponse.content
+
+        with open(os.path.join(self.get_plugin_isntall_path()['path'],'captcha_%s.png' % self._generatedCaptchaId), 'wb') as f:
+            f.write(imgContent)
+
+        # call js callback to show captcha image and form.
+        return (True, {'callFunction': 'bookys_' + self.instance + '_addcaptcha',
+                       'functionData': { 'session' : session.cookies["PHPSESSID"], 'id' : self._generatedCaptchaId } }
+                     , 'Captcha generated.')
+
+    def _validateCaptcha(self, username, password, captchaid, captcha):
+        infos = str(captchaid).split('|')
+
+        checks = self._checkCaptcha(username, password, infos[0], infos[1], str(captcha))
+
+        if not checks[0]:
+            return (False, {}, "bad captcha!")
+        else:
+            return (True, {}, 'OK'+str(checks[0])+ ' = ' + checks[1] + ' = ' + checks[2])
+        
+    _validateCaptcha.args = ['username', 'password', 'captchaid', 'captcha']
+
     def _gatherPasskey(self, userId, cryptedPassword):
         data = {}
 
@@ -201,19 +242,67 @@ class Bookys(Indexer):
 
         return (True, dataWrapper, 'Passkey loaded')
     _gatherPasskey.args = [ "userId", "cryptedPassword" ]
-    
+
+    def _checkCaptcha(self, username, password, sessionid, captchaId, captchaValue):
+        headers = {'content-type': 'application/x-www-form-urlencoded',
+                   'Host': 'bookys.net',
+                   'Origin': 'https://bookys.net',
+                   'Referer': 'https://bookys.net/login.php',
+                   'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36' }
+
+        payload={ 'username':username, 'password':password, 'captcha':captchaValue }
+
+        response = requests.post('https://bookys.net/takelogin.php', verify=False, headers=headers, data=payload, cookies=dict(PHPSESSID=sessionid))
+
+        if 'tb_uid' in response.cookies and 'tb_pass' in response.cookies:
+            return (True, response.cookies['tb_uid'], response.cookies['tb_pass'])
+        return (False, "", "")
+
     def getConfigHtml(self):
         return """<script>
-                function gks_""" + self.instance + """_spreadPasskey(data){
+                function bookys_""" + self.instance + """_spreadPasskey(data){
                   console.log(data);
                   $.each(data, function(k,i){
                       $('#""" + helper.idSafe(self.name) + """ input[name$="'+k+'"]').val(i)
                   });
                 };
 
-                    $('#""" + helper.idSafe(self.name) + """_content .control-group').last().after('<div class="control-group"><label class="control-label" title="">Captcha</label><div class="controls"><img src="https://s.gks.gs/img/img/11-2013/GD_Security_image.jpg" /><input data-belongsto="T411_Default" name="T411-Default-captcha" data-configname="captcha" type="text" value="" onchange="" title="" data-original-title="" /><input type="button" class="btn" value="Validate captcha" onclick="" data-original-title="" title="" /></div></div>');
-                </script>
+                function bookys_""" + self.instance + """_addcaptcha(data) {
+                    console.log(data);
+                    sessionid = data['session'];
+                    captchaid = data['id'];
+                    $('#block_""" + helper.idSafe(self.name) + """_captcha').remove();
 
+                    js = '<div id="block_""" + helper.idSafe(self.name) + """_captcha" class="control-group">';
+                    js += '<label class="control-label" title="">Captcha</label>';
+                    js += '<div class="controls">';
+                    js += '<img src="/api/rest""" + ('/%s/%s/' % (self.identifier, self.instance)) +  """captchaimage?cid='+captchaid+'" alt="'+captchaid+'" />';
+                    js += '<input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="Bookys-""" + self.instance + """-captchaid" data-configname="captchaid" type="text" value="'+sessionid+'|'+captchaid+'" onchange="" title="" data-original-title="" style="height:0px;visibility:collapse;float:right;" />';
+                    js += '<input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="Bookys-""" + self.instance + """-captcha" data-configname="captcha" type="text" value="" onchange="" title="" data-original-title="" />';
+                    js += '<input type="button" class="btn" value="Validate captcha" onclick="pluginAjaxCall(this, \\\'Bookys\\\', \\\'""" + self.instance + """\\\', \\\'""" + helper.idSafe(self.name) + """_content\\\', \\\'_validateCaptcha\\\')" data-original-title="" title="" />';
+                    js += '</div></div>';
+
+                    $('#""" + helper.idSafe(self.name) + """_content .control-group').last().after(js);
+                };
+                </script>
         """
     
     
+    config_meta = {
+        'plugin_desc': 'Bookys.net torrent indexer.',
+        'plugin_buttons': {'test_connection':    {'action': _testConnection, 'name': 'Test connection'},
+                           'generate_captcha' : {'action': _generateCaptcha, 'name': 'Generate Captcha'}}
+          }
+
+    def _captchaimage(self, cid):
+        filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'captcha_%s.png' % cid)
+        if not os.path.exists(filepath):
+            return null
+
+        result = ''
+        with open(filepath, 'rb') as f:
+            result = f.read()
+
+        return result
+    _captchaimage.args = ['cid']
+    _captchaimage.rest = True
