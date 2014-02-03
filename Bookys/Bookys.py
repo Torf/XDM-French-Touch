@@ -137,7 +137,7 @@ class Bookys(Indexer):
     def _getWebResponse(self, url, params, **kwargs):
         if "userId" in kwargs and "cryptedPassword" in kwargs:
             cookies = dict(tb_uid=kwargs['userId'], tb_pass=kwargs['cryptedPassword'])
-        else
+        else:
             cookies = dict(tb_uid=self.hc.userId, tb_pass=self.hc.cryptedPassword)
 
         try:

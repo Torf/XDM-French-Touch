@@ -22,6 +22,14 @@ T411 is a torrent indexer plugin importing torrents from *t411.me tracker*.
 This plugin uses your own t411.me account (login and password) in order to find and download torrents.
 It is currently in BETA but account safe.
 ```
+  
+===
+#####Bookys
+Bookys is a torrent indexer plugin importing torrents from *bookys.net tracker*.
+```
+This plugin uses your own bookys.net account (login and password) in order to find and download torrents.
+It is currently in BETA but account safe.
+```
 
 =============
 
