@@ -28,7 +28,8 @@ import re
 import urllib 
 import unicodedata
 import os.path
-import random
+import pickle
+import base64
 
 class Bookys(Indexer):
     version = "0.101"
@@ -89,15 +90,15 @@ class Bookys(Indexer):
                 self._searchTerm(term, element, downloads)
                 
         if len(downloads) == 0:
-            log.info("No search results for %s." % terms)
-                    
+            log.info("No search results for %s." % termList)
+        
         return downloads
 
     def _searchTerm(self, terms, element, downloads):
         webResult = self._getWebResponse(self._searchUrl(), { 'search' : terms })
 
         if not webResult[0]:
-            log.info("The search of '%s' with '%s' url failed (%s)." % (terms, response.url, webResult[1]))
+            log.info("The search of '%s' with '%s' url failed (%s)." % (terms, self._searchUrl(), webResult[1]))
             return downloads
 
         # Gets each result
@@ -124,7 +125,7 @@ class Bookys(Indexer):
             # Normalize and convert to ASCII the torrent name
             torrentName = unicodedata.normalize('NFKD', torrentName)
             torrentName = torrentName.encode('ascii', 'ignore')
-            torrentName=urllib.unquote(torrentName)
+            torrentName = urllib.unquote(torrentName)
             
             # Add the torrent with correct size and external id.
             d = Download()
@@ -136,47 +137,28 @@ class Bookys(Indexer):
             d.type = 'de.lad1337.torrent'
             downloads.append(d)
 
-    def _getWebResponse(self, url, params, **kwargs):
-        if "userId" in kwargs and "cryptedPassword" in kwargs:
-            cookies = dict(tb_uid=kwargs['userId'], tb_pass=kwargs['cryptedPassword'])
-        else:
-            cookies = dict(tb_uid=self.hc.userId, tb_pass=self.hc.cryptedPassword)
-
+    def _getWebResponse(self, url, params, cookies):
         try:
-            response = requests.get(url, params=params, cookies=cookies)
+            response = requests.get(url, params=params, verify=False, cookies=cookies)
         except requests.exceptions.RequestException:
-            log.error("Error during connection on $s" % self)
+            log.error("Error during connection on %s" % self)
             return (False, 'Please check network !')
 
         if not response.status_code == requests.codes.ok:
             return (False, "Error %s !" % response.status_code)
 
-        soup = BeautifulSoup(response.text, "html.parser")
-        title = soup.find('title')
-        if not title: return (False, "Incomprehensible HTML !")
+        print { 'response':response.text }
 
-        if title.getText().lower() == "bookys :: connexion":
-            return (False, "Wrong login or password !")
-
-        return (True, soup)
-
-    def _testConnection(self, username, password):
-        webResult = self._getWebResponse(self._searchUrl(), {}, userId=username, cryptedPassword=password)
-
-        if not webResult[0]:
-            return (False, {}, "Connection failed ! (%s)" % webResult[1])
-
-        return (True, {}, 'Connection made!')
-    _testConnection.args = ['username', 'password']
+        return (True, response.text)
     
     def _generateCaptcha(self):
         session = requests.Session()
 
         # get new session
-        session.post("https://bookys.net/captcha/newsession.php", verify=False);
+        session.post("https://bookys.net/captcha/newsession.php", verify=False)
 
         # get image url
-        response = session.post("https://bookys.net/captcha/image_req.php", verify=False);
+        response = session.post("https://bookys.net/captcha/image_req.php", verify=False)
         # regex extract from src="captcha/GD_Security_image.php?1391434819"
         match = re.search(r'src="captcha/GD_Security_image.php\?(\d+)"', response.text)
         if not match:
@@ -193,30 +175,37 @@ class Bookys(Indexer):
 
         # call js callback to show captcha image and form.
         return (True, {'callFunction': 'bookys_' + self.instance + '_addcaptcha',
-                       'functionData': { 'session' : session.cookies["PHPSESSID"], 'id' : self._generatedCaptchaId } }
+                       'functionData': { 'session' :  base64.b64encode(pickle.dumps(session)), 'id' : self._generatedCaptchaId } }
                      , 'Captcha generated.')
 
-    def _validateCaptcha(self, username, password, captchaid, captcha):
-        infos = str(captchaid).split('|')
+    def _validateCaptcha(self, username, password, sessionid, captcha):
+        session = pickle.loads(base64.b64decode(sessionid))
 
-        checks = self._checkCaptcha(username, password, infos[0], infos[1], str(captcha))
+        process = session.get('https://bookys.net/captcha/process.php?captcha='+captcha, verify=False, timeout=30)
+        if process.text != "1":
+            return (False, {}, "Bad captcha, try again.") # todo: js callback to get new captcha
 
-        if not checks[0]:
-            return (False, {}, "bad captcha!")
-        else:
-            return (True, {}, 'OK'+str(checks[0])+ ' = ' + checks[1] + ' = ' + checks[2])
+        payload = { 'username':username, 'password':password, 'captcha':captcha }
+
+        response = session.post('https://bookys.net/takelogin.php', verify=False, data=payload)
+
+        if "<title>Bookys :: Home</title>" in response.text:
+            if 'tb_uid' in session.cookies and 'tb_pass' in session.cookies:
+                return self._gatherPasskey(session.cookies['tb_uid'], session.cookies['tb_pass'])
         
-    _validateCaptcha.args = ['username', 'password', 'captchaid', 'captcha']
+        return (False, {}, "Bad login or password !")
+    _validateCaptcha.args = ['username', 'password', 'sessionid', 'captcha']
 
     def _gatherPasskey(self, userId, cryptedPassword):
         data = {}
 
-        webResult = self._getWebResponse(self._linksUrl(), {}, userId=userId, cryptedPassword=cryptedPassword)
+        webResult = self._getWebResponse(self._linksUrl(), {}, dict(tb_uid=userId, tb_pass=cryptedPassword))
 
         if not webResult[0]:
             return (False, {}, 'Gather passkey failed ! (%s)' % webResult[1])
 
-        liste = webResult[1].find("ul", {"class" : "list"})
+        soup = BeautifulSoup.BeautifulSoup(webResult[1], "html.parser")
+        liste = soup.find("ul", {"class" : "list"})
         if liste:
             item = liste.find("li")
             if item:
@@ -235,32 +224,15 @@ class Bookys(Indexer):
 
         # Call the javascript function to fill fields.
         dataWrapper = {'callFunction': 
-                        'bookys_' + self.instance + '_spreadPasskey',
-                        'functionData': 
-                        data
+                        'bookys_' + self.instance + '_spreadFields',
+                        'functionData': data
                         }
 
-        return (True, dataWrapper, 'Passkey loaded')
-    _gatherPasskey.args = [ "userId", "cryptedPassword" ]
-
-    def _checkCaptcha(self, username, password, sessionid, captchaId, captchaValue):
-        headers = {'content-type': 'application/x-www-form-urlencoded',
-                   'Host': 'bookys.net',
-                   'Origin': 'https://bookys.net',
-                   'Referer': 'https://bookys.net/login.php',
-                   'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.102 Safari/537.36' }
-
-        payload={ 'username':username, 'password':password, 'captcha':captchaValue }
-
-        response = requests.post('https://bookys.net/takelogin.php', verify=False, headers=headers, data=payload, cookies=dict(PHPSESSID=sessionid))
-
-        if 'tb_uid' in response.cookies and 'tb_pass' in response.cookies:
-            return (True, response.cookies['tb_uid'], response.cookies['tb_pass'])
-        return (False, "", "")
+        return (True, dataWrapper, 'Passkey loaded.')
 
     def getConfigHtml(self):
         return """<script>
-                function bookys_""" + self.instance + """_spreadPasskey(data){
+                function bookys_""" + self.instance + """_spreadFields(data){
                   console.log(data);
                   $.each(data, function(k,i){
                       $('#""" + helper.idSafe(self.name) + """ input[name$="'+k+'"]').val(i)
@@ -269,7 +241,7 @@ class Bookys(Indexer):
 
                 function bookys_""" + self.instance + """_addcaptcha(data) {
                     console.log(data);
-                    sessionid = data['session'];
+                    sessiondump = data['session'];
                     captchaid = data['id'];
                     $('#block_""" + helper.idSafe(self.name) + """_captcha').remove();
 
@@ -277,7 +249,7 @@ class Bookys(Indexer):
                     js += '<label class="control-label" title="">Captcha</label>';
                     js += '<div class="controls">';
                     js += '<img src="/api/rest""" + ('/%s/%s/' % (self.identifier, self.instance)) +  """captchaimage?cid='+captchaid+'" alt="'+captchaid+'" />';
-                    js += '<input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="Bookys-""" + self.instance + """-captchaid" data-configname="captchaid" type="text" value="'+sessionid+'|'+captchaid+'" onchange="" title="" data-original-title="" style="height:0px;visibility:collapse;float:right;" />';
+                    js += '<input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="Bookys-""" + self.instance + """-sessionid" data-configname="sessionid" type="text" value="'+sessiondump+'" onchange="" title="" data-original-title="" style="height:0px;visibility:collapse;float:right;" />';
                     js += '<input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="Bookys-""" + self.instance + """-captcha" data-configname="captcha" type="text" value="" onchange="" title="" data-original-title="" />';
                     js += '<input type="button" class="btn" value="Validate captcha" onclick="pluginAjaxCall(this, \\\'Bookys\\\', \\\'""" + self.instance + """\\\', \\\'""" + helper.idSafe(self.name) + """_content\\\', \\\'_validateCaptcha\\\')" data-original-title="" title="" />';
                     js += '</div></div>';
@@ -290,14 +262,13 @@ class Bookys(Indexer):
     
     config_meta = {
         'plugin_desc': 'Bookys.net torrent indexer.',
-        'plugin_buttons': {'test_connection':    {'action': _testConnection, 'name': 'Test connection'},
-                           'generate_captcha' : {'action': _generateCaptcha, 'name': 'Generate Captcha'}}
+        'plugin_buttons': {'generate_captcha' : {'action': _generateCaptcha, 'name': 'Generate Captcha'}}
           }
 
     def _captchaimage(self, cid):
         filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'captcha_%s.png' % cid)
         if not os.path.exists(filepath):
-            return null
+            return None
 
         result = ''
         with open(filepath, 'rb') as f:
