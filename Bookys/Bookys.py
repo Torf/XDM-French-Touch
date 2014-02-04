@@ -32,7 +32,7 @@ import pickle
 import base64
 
 class Bookys(Indexer):
-    version = "0.101"
+    version = "0.102"
     identifier = "fr.torf.bookys"
     
     _config = {'authkey': '',
@@ -202,7 +202,7 @@ class Bookys(Indexer):
         webResult = self._getWebResponse(self._linksUrl(), {}, dict(tb_uid=userId, tb_pass=cryptedPassword))
 
         if not webResult[0]:
-            return (False, {}, 'Gather passkey failed ! (%s)' % webResult[1])
+            return (False, {}, 'Gather passkey failed ! (%s)' % webResult[1]) # todo: js callback to get new captcha
 
         soup = BeautifulSoup.BeautifulSoup(webResult[1], "html.parser")
         liste = soup.find("ul", {"class" : "list"})
@@ -212,23 +212,21 @@ class Bookys(Indexer):
                 link = item.find("a")
                 rssLink = link['href']
             else:
-                return (False, {}, "Gather passkey failed ! (Parse error)")
+                return (False, {}, "Gather passkey failed ! (Parse error)") # todo: js callback to get new captcha
         else:
-            return (False, {}, "Gather passkey failed ! (Parse error)")
+            return (False, {}, "Gather passkey failed ! (Parse error)") # todo: js callback to get new captcha
         
         match = re.search(r'&passkey=(\w+)', rssLink)
         if match:
-            data["Passkey"] = match.group(1)
+            passkey = match.group(1)
         else:
-            return (False, {}, "Gather passkey failed ! (Parse link error)")
+            return (False, {}, "Gather passkey failed ! (Parse link error)") # todo: js callback to get new captcha
 
-        # Call the javascript function to fill fields.
-        dataWrapper = {'callFunction': 
-                        'bookys_' + self.instance + '_spreadFields',
-                        'functionData': data
-                        }
+        self.hc.passkey = passkey
+        self.hc.userId = useId
+        self.hc.cryptedPassword = cryptedPassword
 
-        return (True, dataWrapper, 'Passkey loaded.')
+        return (True, {}, 'Passkey loaded.') # Todo: remove captcha.
 
     def getConfigHtml(self):
         return """<script>

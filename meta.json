@@ -60,7 +60,7 @@
         "fr.torf.bookys": [
             {
             "major_version": 0,
-            "minor_version": 101,
+            "minor_version": 102,
             "format": "zip",
             "desc": "Bookys torrent indexer",
             "name": "Bookys",
