@@ -22,9 +22,9 @@
 from xdm.plugins import System
 from collections import OrderedDict
 
-class SystemConfig(System):
+class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.1"
+    version = "0.2"
     _config = OrderedDict([
                ('login_user', ''),
                ('login_password', '')
