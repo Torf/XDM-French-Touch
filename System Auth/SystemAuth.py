@@ -99,7 +99,7 @@ class SystemAuth(System):
         """
 
     def _libsha(self):
-        filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'sha3.js')
+        filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'sha512.js')
         if not os.path.exists(filepath):
             return filepath
 
