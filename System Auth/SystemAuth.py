@@ -21,12 +21,13 @@
 
 from xdm.plugins import System
 from collections import OrderedDict
+from xdm import helper
 import cherrypy
 import os.path
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.4"
+    version = "0.5"
     _config = OrderedDict([
                ('login_user', '')
                ])
