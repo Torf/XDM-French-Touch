@@ -68,8 +68,8 @@ class SystemAuth(System):
                     }
 
                     
-                    $('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val(CryptoJS.SHA3($('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val()).toString());
-                    $('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val(CryptoJS.SHA3($('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val()).toString());
+                    $('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val(CryptoJS.SHA512($('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val()).toString());
+                    $('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val(CryptoJS.SHA512($('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val()).toString());
                 }
 
                 function systemauth_""" + self.instance + """_clear() {
