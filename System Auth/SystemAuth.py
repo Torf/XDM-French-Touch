@@ -26,12 +26,12 @@ import os.path
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.3"
+    version = "0.4"
     _config = OrderedDict([
                ('login_user', '')
                ])
 
-    _hidden_config = [ ('login_password', '') ]
+    _hidden_config = {'login_password': ''}
 
     def _saveNewPassword(self, pwdfirst, pwdsecond):
     	if not pwdfirst or not pwdsecond:
@@ -42,7 +42,7 @@ class SystemAuth(System):
 
     	self.hc.login_password = pwdfirst
         cherrypy.server.restart()
-        
+
     	return (True, {'callFunction': 'systemauth_' + self.instance + '_clear', 'functionData': {}}, "Password changed.")
 
     def _changePassword(self):
