@@ -28,7 +28,7 @@ import hashlib
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.5"
+    version = "0.6"
     _config = OrderedDict([
                ('login_user', '')
                ])
