@@ -5,7 +5,7 @@
     }
 
     function systemauth_{{plugin_instance}}_clear() {
-        $('#block_{{plugin_instance}}_pwdchange').remove();
+        $('#block_SystemAuth_{{plugin_instance}}_pwdchange').remove();
     }
 
     function systemauth_{{plugin_instance}}_addpwdchange() {
@@ -35,5 +35,5 @@
         js += '</div></div>';
 
         $('#SystemAuth_{{plugin_instance}}_content .control-group').eq(1).after(js);
-    };
+    }
 </script>
