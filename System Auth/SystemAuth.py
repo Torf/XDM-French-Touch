@@ -28,7 +28,7 @@ import hashlib
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.6"
+    version = "0.7"
     _config = OrderedDict([
                ('login_user', '')
                ])
@@ -58,16 +58,6 @@ class SystemAuth(System):
     def getConfigHtml(self):
         return """<script>
                 function systemauth_""" + self.instance + """_precrypt() {
-                    if(typeof systemauth_alreadyinclude == 'undefined') {
-                        systemauth_alreadyinclude = 1;
-                        var src = '/api/rest""" + ('/%s/%s/' % (self.identifier, self.instance)) +  """libsha';
-                        var script = document.createElement('script');
-                        script.src = src;
-                        script.type = 'text/javascript';
-                        (document.getElementsByTagName('HEAD')[0] || document.body).appendChild(script);
-                    }
-
-                    
                     $('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val(CryptoJS.SHA512($('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val()).toString());
                     $('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val(CryptoJS.SHA512($('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val()).toString());
                 }
@@ -77,7 +67,16 @@ class SystemAuth(System):
                 }
 
                 function systemauth_""" + self.instance + """_addpwdchange() {
-                    $('#block_""" + helper.idSafe(self.name) + """_pwdchange').remove();
+                    if(typeof systemauth_alreadyinclude == 'undefined') {
+                        systemauth_alreadyinclude = 1;
+                        var src = '/api/rest""" + ('/%s/%s/' % (self.identifier, self.instance)) +  """libsha';
+                        var script = document.createElement('script');
+                        script.src = src;
+                        script.type = 'text/javascript';
+                        (document.getElementsByTagName('HEAD')[0] || document.body).appendChild(script);
+                    }
+
+                    systemauth_""" + self.instance + """_clear();
 
                     js = '<div id="block_""" + helper.idSafe(self.name) + """_pwdchange" class="control-group">';
 
@@ -93,7 +92,7 @@ class SystemAuth(System):
                     js += '<input type="button" class="btn" value="Save new password" onclick="systemauth_""" + self.instance + """_precrypt();pluginAjaxCall(this, \\\'SystemAuth\\\', \\\'""" + self.instance + """\\\', \\\'""" + helper.idSafe(self.name) + """_content\\\', \\\'_saveNewPassword\\\');" data-original-title="" title="" />';
                     js += '</div></div>';
 
-                    $('#""" + helper.idSafe(self.name) + """_content .control-group').last().after(js);
+                    $('#""" + helper.idSafe(self.name) + """_content .control-group').eq(1).after(js);
                 };
                 </script>
         """
@@ -101,7 +100,7 @@ class SystemAuth(System):
     def _libsha(self):
         filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'sha512.js')
         if not os.path.exists(filepath):
-            return filepath
+            return "// 404 - Not Found (%s)" % filepath
 
         result = ''
         with open(filepath, 'rb') as f:
@@ -114,5 +113,6 @@ class SystemAuth(System):
                     'plugin_buttons': {'changePassword': {'action': _changePassword,
                                                                  'name': 'Change password',
                                                                  'desc': 'Change the login password'}
-                                       }
+                                       },
+                    'plugin_desc': 'Authentification account system. (It handles access to XDM, be careful)'
                   }
