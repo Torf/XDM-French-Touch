@@ -30,7 +30,7 @@ from jinja2.loaders import FileSystemLoader, DictLoader
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.82"
+    version = "0.83"
     _config = OrderedDict([
                ('login_user', '')
                ])

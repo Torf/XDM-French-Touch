@@ -31,7 +31,7 @@
         js += '</div></div>';
 
         js += '<div class="controls">'
-        js += '<input type="button" class="btn" value="Save new password" onclick="systemauth_{{plugin_instance}}_precrypt();pluginAjaxCall(this, \\\'SystemAuth\\\', \\\'{{plugin_instance}}\\\', \\\'SystemAuth_{{plugin_instance}}_content\\\', \\\'_saveNewPassword\\\');" data-original-title="" title="" />';
+        js += '<input type="button" class="btn" value="Save new password" onclick="systemauth_{{plugin_instance}}_precrypt();pluginAjaxCall(this, 'SystemAuth', '{{plugin_instance}}', 'SystemAuth_{{plugin_instance}}_content', '_saveNewPassword');" data-original-title="" title="" />';
         js += '</div></div>';
 
         $('#SystemAuth_{{plugin_instance}}_content .control-group').eq(1).after(js);
