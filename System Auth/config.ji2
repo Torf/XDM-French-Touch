@@ -1,0 +1,39 @@
+<script>
+    function systemauth_{{plugin_instance}}_precrypt() {
+        $('#SystemAuth_{{plugin_instance}} input[name$="pwdfirst"]').val(CryptoJS.SHA512($('#SystemAuth_{{plugin_instance}} input[name$="pwdfirst"]').val()).toString());
+        $('#SystemAuth_{{plugin_instance}} input[name$="pwdsecond"]').val(CryptoJS.SHA512($('#SystemAuth_{{plugin_instance}} input[name$="pwdsecond"]').val()).toString());
+    }
+
+    function systemauth_{{plugin_instance}}_clear() {
+        $('#block_{{plugin_instance}}_pwdchange').remove();
+    }
+
+    function systemauth_{{plugin_instance}}_addpwdchange() {
+        if(typeof systemauth_alreadyinclude == 'undefined') {
+            systemauth_alreadyinclude = 1;
+            var src = '/api/rest/{{plugin_identifier}}/{{plugin_instance}}/libsha';
+            var script = document.createElement('script');
+            script.src = src;
+            script.type = 'text/javascript';
+            (document.getElementsByTagName('HEAD')[0] || document.body).appendChild(script);
+        }
+
+        systemauth_{{plugin_instance}}_clear();
+
+        js = '<div id="block_SystemAuth_{{plugin_instance}}_pwdchange" class="control-group">';
+
+        js += '<div class="control-group"><label class="control-label" title="">new password</label>';
+        js += '<div class="controls"><input data-belongsto="SystemAuth_{{plugin_instance}}" name="SystemAuth-{{plugin_instance}}-pwdfirst" data-configname="pwdfirst" type="password" value="" onchange="" title="" data-original-title="">'
+        js += '</div></div>';
+
+        js += '<div class="control-group"><label class="control-label" title="">confirm</label>';
+        js += '<div class="controls"><input data-belongsto="SystemAuth_{{plugin_instance}}" name="SystemAuth-{{plugin_instance}}-pwdsecond" data-configname="pwdsecond" type="password" value="" onchange="" title="" data-original-title="">'
+        js += '</div></div>';
+
+        js += '<div class="controls">'
+        js += '<input type="button" class="btn" value="Save new password" onclick="systemauth_{{plugin_instance}}_precrypt();pluginAjaxCall(this, \\\'SystemAuth\\\', \\\'{{plugin_instance}}\\\', \\\'SystemAuth_{{plugin_instance}}_content\\\', \\\'_saveNewPassword\\\');" data-original-title="" title="" />';
+        js += '</div></div>';
+
+        $('#SystemAuth_{{plugin_instance}}_content .control-group').eq(1).after(js);
+    };
+</script>

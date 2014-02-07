@@ -25,10 +25,12 @@ from xdm import helper
 import cherrypy
 import os.path
 import hashlib
+from jinja2.environment import Environment
+from jinja2.loaders import FileSystemLoader, DictLoader
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.7"
+    version = "0.8"
     _config = OrderedDict([
                ('login_user', '')
                ])
@@ -56,56 +58,15 @@ class SystemAuth(System):
     _changePassword.args = []
 
     def getConfigHtml(self):
-        return """<script>
-                function systemauth_""" + self.instance + """_precrypt() {
-                    $('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val(CryptoJS.SHA512($('input[name="SystemAuth-""" + self.instance + """-pwdfirst"]').val()).toString());
-                    $('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val(CryptoJS.SHA512($('input[name="SystemAuth-""" + self.instance + """-pwdsecond"]').val()).toString());
-                }
-
-                function systemauth_""" + self.instance + """_clear() {
-                    $('#block_""" + helper.idSafe(self.name) + """_pwdchange').remove();
-                }
-
-                function systemauth_""" + self.instance + """_addpwdchange() {
-                    if(typeof systemauth_alreadyinclude == 'undefined') {
-                        systemauth_alreadyinclude = 1;
-                        var src = '/api/rest""" + ('/%s/%s/' % (self.identifier, self.instance)) +  """libsha';
-                        var script = document.createElement('script');
-                        script.src = src;
-                        script.type = 'text/javascript';
-                        (document.getElementsByTagName('HEAD')[0] || document.body).appendChild(script);
-                    }
-
-                    systemauth_""" + self.instance + """_clear();
-
-                    js = '<div id="block_""" + helper.idSafe(self.name) + """_pwdchange" class="control-group">';
-
-                    js += '<div class="control-group"><label class="control-label" title="">new password</label>';
-                    js += '<div class="controls"><input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="SystemAuth-""" + self.instance + """-pwdfirst" data-configname="pwdfirst" type="password" value="" onchange="" title="" data-original-title="">'
-                    js += '</div></div>';
-
-                    js += '<div class="control-group"><label class="control-label" title="">confirm</label>';
-                    js += '<div class="controls"><input data-belongsto="'+""" + helper.idSafe(self.name) + """+'" name="SystemAuth-""" + self.instance + """-pwdsecond" data-configname="pwdsecond" type="password" value="" onchange="" title="" data-original-title="">'
-                    js += '</div></div>';
-
-                    js += '<div class="controls">'
-                    js += '<input type="button" class="btn" value="Save new password" onclick="systemauth_""" + self.instance + """_precrypt();pluginAjaxCall(this, \\\'SystemAuth\\\', \\\'""" + self.instance + """\\\', \\\'""" + helper.idSafe(self.name) + """_content\\\', \\\'_saveNewPassword\\\');" data-original-title="" title="" />';
-                    js += '</div></div>';
-
-                    $('#""" + helper.idSafe(self.name) + """_content .control-group').eq(1).after(js);
-                };
-                </script>
-        """
+        with open("config.ji2", 'r') as f:
+            tpl = f.read()
+        env = Environment(loader=DictLoader({'this': tpl}), extensions=['jinja2.ext.i18n'])
+        elementTemplate = env.get_template('this') # now you have the template
+        return elementTemplate.render(plugin_instance=self.instance, plugin_identifier=self.identifier)
 
     def _libsha(self):
-        filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'sha512.js')
-        if not os.path.exists(filepath):
-            return "// 404 - Not Found (%s)" % filepath
-
-        result = ''
-        with open(filepath, 'rb') as f:
+        with open('sha512.js', 'r') as f:
             result = f.read()
-
         return result
     _libsha.rest = True
 
