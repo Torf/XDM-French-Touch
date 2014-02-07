@@ -30,7 +30,7 @@ from jinja2.loaders import FileSystemLoader, DictLoader
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.81"
+    version = "0.82"
     _config = OrderedDict([
                ('login_user', '')
                ])
@@ -59,7 +59,7 @@ class SystemAuth(System):
 
     def getConfigHtml(self):
         filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'config.ji2')
-        with open(filename, "r") as f:
+        with open(filepath, "r") as f:
             tpl = f.read()
         env = Environment(loader=DictLoader({'this': tpl}), extensions=['jinja2.ext.i18n'])
         elementTemplate = env.get_template('this')
