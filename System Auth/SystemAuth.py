@@ -30,7 +30,7 @@ from jinja2.loaders import FileSystemLoader, DictLoader
 
 class SystemAuth(System):
     identifier = "fr.torf.systemauth"
-    version = "0.8"
+    version = "0.81"
     _config = OrderedDict([
                ('login_user', '')
                ])
@@ -58,14 +58,16 @@ class SystemAuth(System):
     _changePassword.args = []
 
     def getConfigHtml(self):
-        with open("config.ji2", 'r') as f:
+        filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'config.ji2')
+        with open(filename, "r") as f:
             tpl = f.read()
         env = Environment(loader=DictLoader({'this': tpl}), extensions=['jinja2.ext.i18n'])
-        elementTemplate = env.get_template('this') # now you have the template
+        elementTemplate = env.get_template('this')
         return elementTemplate.render(plugin_instance=self.instance, plugin_identifier=self.identifier)
 
     def _libsha(self):
-        with open('sha512.js', 'r') as f:
+        filepath = os.path.join(self.get_plugin_isntall_path()['path'], 'sha512.js')
+        with open(filepath, 'r') as f:
             result = f.read()
         return result
     _libsha.rest = True
