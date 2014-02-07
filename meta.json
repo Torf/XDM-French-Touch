@@ -71,7 +71,7 @@
         "fr.torf.systemauth": [
             {
             "major_version": 0,
-            "minor_version": 6,
+            "minor_version": 7,
             "format": "zip",
             "desc": "Authentification system",
             "name": "System Auth",
