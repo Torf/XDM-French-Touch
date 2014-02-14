@@ -16,7 +16,7 @@
         "fr.torf.t411": [
             {
                 "major_version": 0,
-                "minor_version": 108,
+                "minor_version": 111,
                 "format": "zip",
                 "desc": "T411.me torrent indexer",
                 "name": "T411",
@@ -27,7 +27,7 @@
         "fr.torf.rutorrent": [
             {
                 "major_version": 0,
-                "minor_version": 122,
+                "minor_version": 124,
                 "format": "zip",
                 "desc": "rutorrent torrent downloader",
                 "name": "Rutorrent",
@@ -57,15 +57,26 @@
             "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
             }
         ],
-        "fr.torf.bookys": [
+        "fr.torf.alternativetitles": [
             {
             "major_version": 0,
-            "minor_version": 102,
+            "minor_version": 11,
             "format": "zip",
-            "desc": "Bookys torrent indexer",
-            "name": "Bookys",
-            "type": "Indexer",
-            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev-bookys.zip"
+            "desc": "Alternative Titles",
+            "name": "Alternative Titles",
+            "type": "SearchTermFilter",
+            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
+            }
+        ],
+        "fr.torf.systemauth": [
+            {
+            "major_version": 0,
+            "minor_version": 9,
+            "format": "zip",
+            "desc": "Authentification system",
+            "name": "System Auth",
+            "type": "System",
+            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/feature/SystemAuth.zip"
             }
         ]
     }
