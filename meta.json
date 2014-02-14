@@ -1,82 +1,117 @@
 {
-    "name": "XDM Repository - French Touch",
-    "info_url": "https://github.com/Torf/XDM-French-Touch",
+    "name": "XDM Repository - French Touch", 
+    "info_url": "https://github.com/Torf/XDM-French-Touch", 
     "plugins": {
+        "fr.torf.bookys": [
+            {
+                "major_version": 0, 
+                "minor_version": 102, 
+                "name": "Bookys", 
+                "type": "Indexer", 
+                "format": "zip", 
+                "desc": "Bookys.net torrent indexer.", 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
+            }
+        ], 
+        "fr.torf.diacritics": [
+            {
+                "major_version": 0, 
+                "minor_version": 1, 
+                "name": "Diacritics", 
+                "type": "SearchTermFilter", 
+                "format": "zip", 
+                "desc": "For each search term generate another one where \u00e9 is replaced with e and so forth.", 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
+            }
+        ], 
         "fr.torf.gks": [
             {
-                "major_version": 0,
-                "minor_version": 117,
-                "format": "zip",
-                "desc": "Gks.gs torrent indexer",
-                "name": "GKS",
-                "type": "Indexer",
-                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
+                "major_version": 0, 
+                "minor_version": 117, 
+                "name": "GKS", 
+                "type": "Indexer", 
+                "format": "zip", 
+                "desc": "Gks.gs torrent indexer.", 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
             }
-        ],
-        "fr.torf.t411": [
-            {
-                "major_version": 0,
-                "minor_version": 111,
-                "format": "zip",
-                "desc": "T411.me torrent indexer",
-                "name": "T411",
-                "type": "Indexer",
-                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
-            }
-        ],
-        "fr.torf.rutorrent": [
-            {
-                "major_version": 0,
-                "minor_version": 124,
-                "format": "zip",
-                "desc": "rutorrent torrent downloader",
-                "name": "Rutorrent",
-                "type": "Downloader",
-                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
-            }
-        ],
+        ], 
         "fr.torf.rss": [
             {
-                "major_version": 0,
-                "minor_version": 12,
-                "format": "zip",
-                "desc": "RSS (broadcatching) torrent downloader",
-                "name": "RSS",
-                "type": "Downloader",
-                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
+                "major_version": 0, 
+                "minor_version": 12, 
+                "name": "RSS", 
+                "type": "Downloader", 
+                "format": "zip", 
+                "desc": null, 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
             }
-        ],
+        ], 
+        "fr.torf.rutorrent": [
+            {
+                "major_version": 0, 
+                "minor_version": 124, 
+                "name": "Rutorrent", 
+                "type": "Downloader", 
+                "format": "zip", 
+                "desc": "Rutorrent downloader.", 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
+            }
+        ], 
+        "fr.torf.t411": [
+            {
+                "major_version": 0, 
+                "minor_version": 111, 
+                "name": "T411", 
+                "type": "Indexer", 
+                "format": "zip", 
+                "desc": "T411.me torrent indexer.", 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
+            }
+        ], 
         "fr.torf.transmission": [
             {
-            "major_version": 0,
-            "minor_version": 105,
-            "format": "zip",
-            "desc": "Transmission torrent downloader",
-            "name": "Transmission",
-            "type": "Downloader",
-            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
-            }
-        ],
-        "fr.torf.alternativetitles": [
-            {
-            "major_version": 0,
-            "minor_version": 11,
-            "format": "zip",
-            "desc": "Alternative Titles",
-            "name": "Alternative Titles",
-            "type": "SearchTermFilter",
-            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
-            }
-        ],
-        "fr.torf.systemauth": [
-            {
-            "major_version": 0,
-            "minor_version": 9,
-            "format": "zip",
-            "desc": "Authentification system",
-            "name": "System Auth",
-            "type": "System",
-            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/feature/SystemAuth.zip"
+                "major_version": 0, 
+                "minor_version": 105, 
+                "name": "Transmission", 
+                "type": "Downloader", 
+                "format": "zip", 
+                "desc": "Transmission downloader.", 
+                "xdm_version": [
+                    0, 
+                    5, 
+                    18
+                ], 
+                "download_url": "https://github.com/Torf/XDM-French-Touch/archive/dev.zip"
             }
         ]
     }
