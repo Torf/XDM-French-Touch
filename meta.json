@@ -68,15 +68,15 @@
             "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
             }
         ],
-        "fr.torf.diacritics": [
+        "fr.torf.systemauth": [
             {
             "major_version": 0,
-            "minor_version": 11,
+            "minor_version": 9,
             "format": "zip",
-            "desc": "Alternative Titles",
-            "name": "Alternative Titles",
-            "type": "SearchTermFilter",
-            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/master.zip"
+            "desc": "Authentification system",
+            "name": "System Auth",
+            "type": "System",
+            "download_url": "https://github.com/Torf/XDM-French-Touch/archive/feature/SystemAuth.zip"
             }
         ]
     }
